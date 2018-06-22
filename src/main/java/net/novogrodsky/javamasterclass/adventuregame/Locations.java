@@ -1,6 +1,7 @@
 package net.novogrodsky.javamasterclass.adventuregame;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,17 +12,29 @@ import java.util.Scanner;
 import java.util.Set;
 
 /**
+ * This class represents the locations and directions in the game.
+ * Each location is on one line in a flat file.  A location contains
+ * two pieces of information: a key and a description of the location.
+ *
+ * The directions files is also a flat file and each record is on its
+ * own line.  Each record contains the following information: the number
+ * key for a location, a directions, and another location.  The information
+ * is comma delimited.
+ *
  * Created by timbuchalka on 2/04/2016.
+ *
+ * @Editor D Novogrodsky
  */
 public class Locations implements Map<Integer, Location> {
 
+  // The locations object is used by the main class.
   private static Map<Integer, Location> locations = new HashMap<Integer, Location>();
 
   static {
-
-    //Scanner scanner = null;
-    try (FileReader locationFileReader = new FileReader("locations_big.txt");
-        Scanner scanner = new Scanner(locationFileReader);) {
+    try (BufferedReader locationFileReader = new BufferedReader(
+        new FileReader("locations_big.txt"));
+        Scanner scanner = new Scanner(locationFileReader);
+    ) {
 
       scanner.useDelimiter(",");
       while (scanner.hasNextLine()) {
@@ -60,19 +73,13 @@ public class Locations implements Map<Integer, Location> {
 
   }
 
-  public static void main(String[] args) throws IOException {
 
-    FileWriter locFile = null;
-    try {
-      locFile = new FileWriter("locations.txt");
+  public static void main(String[] args) throws IOException {
+    try (BufferedWriter locFile = new BufferedWriter(
+        new FileWriter("locations.txt"))) {
       for (Location location : locations.values()) {
-        locFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
-      }
-    } finally {
-      System.out.println("in finally block");
-      if (locFile != null) {
-        System.out.println("Attempting to close locfile");
-        locFile.close();
+        locFile.write(location.getLocationID() + ","
+            + location.getDescription() + "\n");
       }
     }
   }
@@ -138,3 +145,4 @@ public class Locations implements Map<Integer, Location> {
     return locations.entrySet();
   }
 }
+

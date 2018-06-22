@@ -12,6 +12,12 @@ public class Location {
   private final String description;
   private final Map<String, Integer> exits;
 
+  /**
+   *
+   * @param locationID
+   * @param description
+   * @param exits
+   */
   public Location(int locationID, String description, Map<String, Integer> exits) {
     this.locationID = locationID;
     this.description = description;
