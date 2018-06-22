@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -28,7 +29,7 @@ import java.util.Set;
 public class Locations implements Map<Integer, Location> {
 
   // The locations object is used by the main class.
-  private static Map<Integer, Location> locations = new HashMap<Integer, Location>();
+  private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
   static {
     try (BufferedReader locationFileReader = new BufferedReader(
@@ -73,13 +74,16 @@ public class Locations implements Map<Integer, Location> {
 
   }
 
-
   public static void main(String[] args) throws IOException {
-    try (BufferedWriter locFile = new BufferedWriter(
-        new FileWriter("locations.txt"))) {
+    try (BufferedWriter locFile = new BufferedWriter(new FileWriter("locations.txt"));
+        BufferedWriter dirFile = new BufferedWriter(new FileWriter("directions.txt"));
+    ) {
       for (Location location : locations.values()) {
-        locFile.write(location.getLocationID() + ","
-            + location.getDescription() + "\n");
+        locFile.write(location.getLocationID() + "," + location.getDescription() + "\n");
+        for(String direction : location.getExits().keySet()) {
+          dirFile.write(location.getLocationID() + "," + direction + "," +
+              location.getExits().get(direction) + "\n");
+        }
       }
     }
   }
